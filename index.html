@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My WebGIS Application</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.2.2/ol.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            width: 100%;
+            height: 80%;  /* Adjust height to leave space for the header */
+        }
+        .header {
+            text-align: center;  /* Center align the title */
+            margin: 20px 0;  /* Add some margin for spacing */
+            font-size: 24px;  /* You can adjust the font size */
+            font-weight: bold;  /* Make the text bold */
+        }
+
+ #legend {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1000;
+        }
+        #legend img {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="header">My first WebGIS</div>  <!-- This is where the text will appear -->
+    <div id="map"></div>  <!-- The map container -->
+    
+
+<div id="legend">
+    <h4>Legend</h4>
+  <img src="http://localhost:8080/geoserver/jcb_workspace/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&LAYERS=municipal_utm&STYLE=&FORMAT=image/png" alt="municipal_utm">
+
+
+
+  </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@7.2.2/dist/ol.js"></script>
+    <script>
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                // OpenStreetMap basemap
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                // GeoServer WMS layer
+                new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                        url: 'http://localhost:8080/geoserver/jcb_workspace/wms',  // Adjust to your GeoServer WMS endpoint
+                        params: {
+                            'LAYERS': 'jcb_workspace:municipal_utm',  // Your workspace and layer name
+                            'TILED': true
+                        },
+                        serverType: 'geoserver'
+                    })
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([120, 10]),  // Adjust the center coordinates to fit your data
+                zoom: 5  // Adjust zoom level
+            })
+        });
+    </script>
+</body>
+</html>
